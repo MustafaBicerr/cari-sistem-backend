@@ -1,0 +1,20 @@
+# Bağımlılıklar (Bunlar çok yer kaplar, yüklenmez)
+node_modules/
+
+# Güvenlik (ÇOK ÖNEMLİ)
+.env
+.env.local
+.env.*
+
+# Yüklenen Dosyalar (Veritabanı resimleri vb. git'e atılmaz)
+src/uploads/
+uploads/
+
+# İşletim sistemi dosyaları
+.DS_Store
+Thumbs.db
+
+# Loglar
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
