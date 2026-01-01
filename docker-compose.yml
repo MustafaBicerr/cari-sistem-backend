@@ -1,0 +1,50 @@
+
+
+services:
+  # 1. VERİTABANI (POSTGRES)
+  db:
+    image: postgres:16-alpine
+    container_name: cari_db  # İsim düzeltildi
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      
+
+  # 2. PGADMIN (DB Yönetim Paneli)
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: cari_pgadmin # İsim düzeltildi
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@sistem.com # Jenerik mail
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+
+  # 3. BACKEND (API)
+  api:
+    build: ./backend
+    container_name: cari_api # İsim düzeltildi
+    command: npm run dev
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgres://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
+      PORT: 3000
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+      # 👇 İŞTE BU SATIR SİHİRLİ! Senin C diskini Backend'e bağlıyoruz
+      # - C:/Users/mbice/Desktop/Cari_ERP_Sistem/demo/assets/img:/app/uploads
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
